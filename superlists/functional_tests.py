@@ -11,7 +11,7 @@ class NewVisitorTest(unittest.TestCase):
             self.browser = webdriver.Chrome(executable_path='../chromedriver.exe')
         else:
             self.browser = webdriver.PhantomJS(executable_path='../phantomjs.exe')
-        self.browser.implicitly_wait(2)
+        #self.browser.implicitly_wait(2)
 
     def tearDown(self):
         self.browser.quit()
@@ -26,8 +26,8 @@ class NewVisitorTest(unittest.TestCase):
         self.assertIn('To-Do', header_text)
 
         # 网站需要输入一个待办事项
-        inputbox = self.browser.find_element_by_tag_id('id_new_item')
-        self.assertEqual(inputbox.get_attribute('placehodler'), 'Enter a to-do item')
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertEqual(inputbox.get_attribute('placeholder'), 'Enter a to-do item')
 
         # 在文本框输入待办事项"Buy peacock feathers"
         inputbox.send_keys('Buy peacock feathers')
@@ -36,9 +36,12 @@ class NewVisitorTest(unittest.TestCase):
         # 待办事项表格显示"1: Buy peacock feathers"
         inputbox.send_keys(Keys.ENTER)
 
-        table = self.browser.find_element_by_tag_id('id_list_table')
+        table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertEqual(any(row.text == '1: Buy peacock feathers' for row in rows))
+        self.assertEqual(
+            any(row.text == '1: Buy peacock feathers' for row in rows),
+            'New to-do item did not appear in table'
+        )
 
         # 页面又显示了一个文本框，可以输入其它待办事项
         # 输入"Use peacock feathers to make a fly"
