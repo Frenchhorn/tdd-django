@@ -7,5 +7,9 @@ python functional_tests.py
 # run tests
 python manage.py test [appName]
 
-# create database and table
+# set database and table information
 python manage.py makemigrations
+
+# create database
+python manage.py migrate
+python manage.py migrate --noinput
