@@ -7,12 +7,19 @@ EXECUTABLE_DRIVER = 'phantomjs'
 
 class NewVisitorTest(LiveServerTestCase):
 
-    def setUp(self):
+    def initBrowser(self):
         if EXECUTABLE_DRIVER == 'chrome':
             self.browser = webdriver.Chrome(executable_path='../chromedriver.exe')
         else:
             self.browser = webdriver.PhantomJS(executable_path='../phantomjs.exe')
-        #self.browser.implicitly_wait(2)
+
+    def setUp(self):
+        # if EXECUTABLE_DRIVER == 'chrome':
+        #     self.browser = webdriver.Chrome(executable_path='../chromedriver.exe')
+        # else:
+        #     self.browser = webdriver.PhantomJS(executable_path='../phantomjs.exe')
+        # #self.browser.implicitly_wait(2)
+        self.initBrowser()
 
     def tearDown(self):
         self.browser.quit()
@@ -38,9 +45,11 @@ class NewVisitorTest(LiveServerTestCase):
         # 在文本框输入待办事项"Buy peacock feathers"
         inputbox.send_keys('Buy peacock feathers')
 
-        # 按回车键后，页面更新了
-        # 待办事项表格显示"1: Buy peacock feathers"
+        # 按回车键后，页面更新了，跳到一个新的URL
+        # 这个页面的待办事项表格显示"1: Buy peacock feathers"
         inputbox.send_keys(Keys.ENTER)
+        first_list_url = self.browser.current_url
+        self.assertRegex(first_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: Buy peacock feathers')
 
         # 页面又显示了一个文本框，可以输入其它待办事项
@@ -53,9 +62,33 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_row_in_list_table('1: Buy peacock feathers')
         self.check_for_row_in_list_table('2: Use peacock feathers to make a fly')
 
-        # 网站需要记住事项清单
-        # 需要为每个用户生成唯一的id
-        # 页面需要解释性文本
+        ## 使用一个新的浏览器会话
+        self.browser.quit()
+        self.initBrowser()
+
+        # 一个新用户访问首页，看不到其它用户的待办事项
+        self.browser.get(self.live_server_url)
+        page_text = self.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('Use peacock feathers to make a fly', page_text)
+        
+
+        # 新用户输入一个新事项，新建一个清单
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+
+        # 新用户获得他的URL，两个URL不一样
+        second_list_url = self.browser.current_url
+        self.assertRegex(second_list_url, '/lists/.+')
+        self.assertNotEqual(first_list_url, second_list_url)
+        # 可以看到他的事项
+        self.check_for_row_in_list_table('Buy milk')
+        # 看不到其他人的事项
+        page_text = self.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('Use peacock feathers to make a fly', page_text)
+
 
         self.fail('Finish the test!')
 
