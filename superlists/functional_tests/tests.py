@@ -83,9 +83,9 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertRegex(second_list_url, '/lists/.+')
         self.assertNotEqual(first_list_url, second_list_url)
         # 可以看到他的事项
-        self.check_for_row_in_list_table('Buy milk')
+        self.check_for_row_in_list_table('1: Buy milk')
         # 看不到其他人的事项
-        page_text = self.find_element_by_tag_name('body').text
+        page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertNotIn('Use peacock feathers to make a fly', page_text)
 
