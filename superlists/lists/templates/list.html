@@ -1,7 +1,7 @@
 <html>
     <title>To-Do lists</title>
     <body>
-        <form method="POST" action="/">
+        <form method="POST" action="/lists/new">
             <input type="text" name="item_text" id="id_new_item" placeholder="Enter a to-do item">
             {% csrf_token %}
         </form>
