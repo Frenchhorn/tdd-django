@@ -8,6 +8,9 @@ python manage.py test functional_tests
 ### run tests
 python manage.py test [appName]
 
+### run all test
+python manage.py test
+
 ### set database and table information
 python manage.py makemigrations
 
