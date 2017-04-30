@@ -1,29 +1,29 @@
 Python 3.5.3
 Django 1.11
 
-### run server
-manage.py runserver
+### 启动服务器
+`manage.py runserver`
 
-### run functional tests
-~~python functional_tests.py~~
-manage.py test functional_tests
+### 进行所有测试
+`manage.py test`
 
-### run tests
-manage.py test [appName]
+### 进行功能测试
+~~python manage.py functional_tests.py~~
+`manage.py test functional_tests`
 
-### run all test
-manage.py test
+### 测试某一应用
+`manage.py test [appname]`
 
-### set database and table information
-manage.py makemigrations
+### 记录models.py的改动
+`manage.py makemigrations`
 
-### create database
-manage.py migrate
-manage.py migrate --noinput
+### 将改动作用到数据库
+`manage.py migrate`
+`manage.py migrate --noinput`
 
-### manage.py collect static file
-manage.py collectstatic
-
+### 收集静态文件
+`manage.py collectstatic`
+>相关设置在settings.py下的STATIC_URL与STATIC_ROOT
 
 ### 备注
 使用LESS定制Bootstrap
