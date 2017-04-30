@@ -36,7 +36,7 @@ class NewItemTest(TestCase):
         self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, 'A new item for existing list')
-        self.assertEqual(new_item.list, correct_list)
+        self.assertEqual(new_item.list_item, correct_list)
 
     def test_redirects_to_list_view(self):
         other_list = List.objects.create()
@@ -50,7 +50,7 @@ class NewItemTest(TestCase):
 
 class NewListTest(TestCase):
 
-    def test__saving_a_POST_request(self):
+    def test_saving_a_POST_request(self):
         self.client.post('/lists/new', data={'item_text': 'A new list item'})
 
         self.assertEqual(Item.objects.count(), 1)
@@ -71,12 +71,12 @@ class ListViewTest(TestCase):
 
     def test_displays_only_items_for_that_list(self):
         correct_list = List.objects.create()
-        Item.objects.create(list=correct_list, text='itemey 1')
-        Item.objects.create(list=correct_list, text='itemey 2')
+        Item.objects.create(list_item=correct_list, text='itemey 1')
+        Item.objects.create(list_item=correct_list, text='itemey 2')
 
         other_list = List.objects.create()
-        Item.objects.create(list=other_list, text='Other itemey 1')
-        Item.objects.create(list=other_list, text='Othre itemey 2')
+        Item.objects.create(list_item=other_list, text='Other itemey 1')
+        Item.objects.create(list_item=other_list, text='Othre itemey 2')
 
         response = self.client.get('/lists/%d/' % (correct_list.id, ))
 
@@ -99,12 +99,12 @@ class ListAndItemModelsTest(TestCase):
 
         first_item = Item()
         first_item.text = 'The first (ever) list item'
-        first_item.list = list_
+        first_item.list_item = list_
         first_item.save()
 
         second_item = Item()
         second_item.text = 'Item the second'
-        second_item.list = list_
+        second_item.list_item = list_
         second_item.save()
 
         saved_list = List.objects.first()
@@ -116,7 +116,7 @@ class ListAndItemModelsTest(TestCase):
         first_saved_item = saved_items[0]
         second_saved_item = saved_items[1]
         self.assertEqual(first_saved_item.text, 'The first (ever) list item')
-        self.assertEqual(first_saved_item.list, list_)
+        self.assertEqual(first_saved_item.list_item, list_)
         self.assertEqual(second_saved_item.text, 'Item the second')
-        self.assertEqual(second_saved_item.list, list_)
+        self.assertEqual(second_saved_item.list_item, list_)
 

@@ -14,11 +14,11 @@ def view_list(request, list_id):
 def new_list(request):
     if request.method == 'POST':
         list_ = List.objects.create()
-        Item.objects.create(list=list_, text=request.POST['item_text'])
+        Item.objects.create(list_item=list_, text=request.POST['item_text'])
         return redirect('/lists/%d/' % (list_.id, ))
 
 def add_item(request, list_id):
     if request.method == 'POST':
         list_ = List.objects.get(id=list_id)
-        Item.objects.create(list=list_, text=request.POST['item_text'])
+        Item.objects.create(list_item=list_, text=request.POST['item_text'])
         return redirect('/lists/%d/' % (list_.id, ))
