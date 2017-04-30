@@ -2,21 +2,31 @@ Python 3.5.3
 Django 1.11
 
 ### run server
-python manage.py runserver
+manage.py runserver
 
 ### run functional tests
 ~~python functional_tests.py~~
-python manage.py test functional_tests
+manage.py test functional_tests
 
 ### run tests
-python manage.py test [appName]
+manage.py test [appName]
 
 ### run all test
-python manage.py test
+manage.py test
 
 ### set database and table information
-python manage.py makemigrations
+manage.py makemigrations
 
 ### create database
-python manage.py migrate
-python manage.py migrate --noinput
+manage.py migrate
+manage.py migrate --noinput
+
+### manage.py collect static file
+manage.py collectstatic
+
+
+### 备注
+使用LESS定制Bootstrap
+使用{% static %}模板标签
+客户端打包工具，例如bower
+
