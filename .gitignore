@@ -92,3 +92,4 @@ ENV/
 chromedriver.exe
 db.sqlite3
 phantomjs.exe
+venv
