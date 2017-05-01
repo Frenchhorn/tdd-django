@@ -29,15 +29,20 @@ Django 1.11
 
 ## 部署相关
 ### 添加用户
-`useradd -m -s /bin/bash elspeth`
+`sudo useradd -m -s /bin/bash elspeth`
 >用户名为elspeth, -m表示创建家目录, -s表示默认能用bash
 ### 添加权限
-`usermod -a -G sudo elspeth`
+`sudo usermod -a -G sudo elspeth`
 >把elspeth添加到sudo用户组
 ### 设置密码
-`passwd elspeth`
+`sudo passwd elspeth`
 ### 切换当前用户
 `su - elspeth`
+
+### 安装Nginx
+`sudo apt-get install nginx`
+### 开启Nginx服务器
+`sudo service nginx start`
 
 
 
