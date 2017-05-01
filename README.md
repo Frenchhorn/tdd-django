@@ -43,8 +43,33 @@ Django 1.11
 `sudo apt-get install nginx`
 ### 开启Nginx服务器
 `sudo service nginx start`
+### 关闭Nginx服务器
+`sudo service nginx stop`
+
+### 安装Python, Git, pip
+`sudo apt-get install git python3 python3-pip
 
 
+## virtualenv的使用
+### 安装virtualenv
+`sudo pip3 install virtualenv`
+### 创建一个独立的Python运行环境
+`virtualenv venv`
+>该命令会新建一个文件夹venv,文件夹中是自成一体的Python环境
+### 进入该环境
+>Linux
+`source venv/bin/activate`
+>Window下是运行venv/Scripts下的activate
+`cd venv/Scripts`
+`activate`
+### 在该环境下安装需要的包如:
+`pip install django==1.11`
+### 保存环境
+`pip freeze | requirments.txt`
+### 在新环境安装这些包
+`pip install -r requirments.txt`
+### 退出环境
+`deactivate`
 
 ## 备注
 * 使用LESS定制Bootstrap
