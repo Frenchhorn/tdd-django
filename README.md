@@ -1,6 +1,8 @@
+## 环境
 Python 3.5.3
 Django 1.11
 
+## django相关的命令
 ### 启动服务器
 `manage.py runserver`
 
@@ -25,8 +27,21 @@ Django 1.11
 `manage.py collectstatic`
 >相关设置在settings.py下的STATIC_URL与STATIC_ROOT
 
-### 备注
-使用LESS定制Bootstrap
-使用{% static %}模板标签
-客户端打包工具，例如bower
+## 部署相关
+### 添加用户
+`useradd -m -s /bin/bash elspeth`
+>用户名为elspeth, -m表示创建家目录, -s表示默认能用bash
+### 添加权限
+`usermod -a -G sudo elspeth`
+>把elspeth添加到sudo用户组
+### 设置密码
+`passwd elspeth`
+### 切换当前用户
+`su - elspeth`
 
+
+
+## 备注
+* 使用LESS定制Bootstrap
+* 使用{% static %}模板标签
+* 客户端打包工具，例如bower

@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 
 
 EXECUTABLE_DRIVER = 'phantomjs'
+SERVER_URL = ''
 
 class NewVisitorTest(StaticLiveServerTestCase):
 
@@ -13,12 +14,15 @@ class NewVisitorTest(StaticLiveServerTestCase):
         else:
             self.browser = webdriver.PhantomJS(executable_path='../phantomjs.exe')
 
+    @classmethod
+    def setUpClass(cls):
+        if SERVER_URL :
+            cls.server_url = SERVER_URL
+            return
+        super().setUpClass()
+        cls.server_url = cls.live_server_url
+
     def setUp(self):
-        # if EXECUTABLE_DRIVER == 'chrome':
-        #     self.browser = webdriver.Chrome(executable_path='../chromedriver.exe')
-        # else:
-        #     self.browser = webdriver.PhantomJS(executable_path='../phantomjs.exe')
-        # #self.browser.implicitly_wait(2)
         self.initBrowser()
 
     def tearDown(self):
@@ -31,7 +35,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # 查看网站的首页
-        self.browser.get(self.live_server_url)    
+        self.browser.get(self.server_url)    
 
         # 首页的标题和头部有着'To-DO'这个词
         self.assertIn('To-Do', self.browser.title)
@@ -67,7 +71,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
         self.initBrowser()
 
         # 一个新用户访问首页，看不到其它用户的待办事项
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertNotIn('Use peacock feathers to make a fly', page_text)
@@ -91,7 +95,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
 
     def test_layout_and_styling(self):
         # 访问首页
-        self.browser.get(self.live_server_url)
+        self.browser.get(self.server_url)
         self.browser.set_window_size(1024, 768)
 
         # 输入框居中显示
