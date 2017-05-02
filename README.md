@@ -78,8 +78,16 @@ Gunicorn 19.7.1
 ### 编写upstart
 >在etc/init/gunicorn-tdd-django
 
+## Fabric的使用
+### 安装fabric
+`pip install fabric`    
+>仅支持Python2.5-2.7
+### 编写部署脚本
+`fab <function_name>,host=SERVER_ADDRESS`
+
 
 ## 备注
 * 使用LESS定制Bootstrap
 * 使用{% static %}模板标签
 * 客户端打包工具，例如bower
+* 其它部署工具:Absible, Vagrant, Chef, Puppet, Salt, Juju
