@@ -1,37 +1,9 @@
-from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from .base import FunctionalTest
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 
 
-EXECUTABLE_DRIVER = 'phantomjs'
-SERVER_URL = ''
-
-class NewVisitorTest(StaticLiveServerTestCase):
-
-    def initBrowser(self):
-        if EXECUTABLE_DRIVER == 'chrome':
-            self.browser = webdriver.Chrome(executable_path='../chromedriver.exe')
-        else:
-            self.browser = webdriver.PhantomJS(executable_path='../phantomjs.exe')
-
-    @classmethod
-    def setUpClass(cls):
-        if SERVER_URL :
-            cls.server_url = SERVER_URL
-            return
-        super().setUpClass()
-        cls.server_url = cls.live_server_url
-
-    def setUp(self):
-        self.initBrowser()
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def check_for_row_in_list_table(self, row_text):
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertIn(row_text, [row.text for row in rows])
+class NewVisitorTest(FunctionalTest):
 
     def test_can_start_a_list_and_retrieve_it_later(self):
         # 查看网站的首页
@@ -92,18 +64,3 @@ class NewVisitorTest(StaticLiveServerTestCase):
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
         self.assertNotIn('Use peacock feathers to make a fly', page_text)
-
-    def test_layout_and_styling(self):
-        # 访问首页
-        self.browser.get(self.server_url)
-        self.browser.set_window_size(1024, 768)
-
-        # 输入框居中显示
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        inputbox.send_keys('testing')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width']/2,
-            512,
-            delta=5
-        )
-
