@@ -1,3 +1,7 @@
+'''
+模型层，用于处理数据库相关的内容
+'''
+
 from django.db import models
 from django.core.urlresolvers import reverse
 
