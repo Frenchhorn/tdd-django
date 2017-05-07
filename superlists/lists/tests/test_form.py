@@ -4,7 +4,6 @@
 from django.test import TestCase
 from lists.models import Item, List
 from lists.forms import ItemForm, ItemFormAPI, EMPTY_LIST_ERROR
-
 class ItemFormTest(TestCase):
 
     # 这个测试与该项目无关，仅为探索相关的API

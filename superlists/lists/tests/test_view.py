@@ -19,7 +19,7 @@ from django.utils.html import escape
 
 from lists.views import home_page
 from lists.models import Item, List
-from lists.forms import ItemForm, EMPTY_LIST_ERROR
+from lists.forms import ItemForm, EMPTY_LIST_ERROR, DUPLICATE_ITEM_ERROR
 
 # Create your tests here.
 
@@ -137,6 +137,7 @@ class ListViewTest(TestCase):
         list_ = List.objects.create()
         response = self.client.get('/lists/%d/' % list_.id)
         self.assertIsInstance(response.context['form'], ItemForm)
+        self.assertContains(response, 'name="text"')
 
     # POST请求的数值非法时，不创建数据
     def test_for_invalid_input_nothing_saved_to_db(self):
@@ -158,6 +159,20 @@ class ListViewTest(TestCase):
     def test_for_invalid_input_show_error_on_page(self):
         response = self.post_invalid_input()
         self.assertContains(response, escape(EMPTY_LIST_ERROR))
+
+    # 提交已存在的Item对象的list_item, text组合，返回错误信息
+    # def test_duplicate_item_validation_errors_end_up_on_lists_page(self):
+    #     list_a = List.objects.create()
+    #     item_a = Item.objects.create(list_item=list_a, text='textey')
+    #     response = self.client.post(
+    #         '/lists/%d/' % (list_a.id,),
+    #         data={'text': 'textey'}
+    #     )
+
+    #     expected_error = escape(DUPLICATE_ITEM_ERROR)
+    #     self.assertContains(response, expected_error)
+    #     self.assertTemplateUsed(response, 'list.html')
+    #     self.assertEqual(Item.objects.all().count(), 1)
 
 
 class ListAndItemModelsTest(TestCase):

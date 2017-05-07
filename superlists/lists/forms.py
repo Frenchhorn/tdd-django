@@ -3,8 +3,11 @@
 '''
 from django import forms
 from lists.models import Item
+from django.core.exceptions import ValidationError
 
-EMPTY_LIST_ERROR = "You can't have an empty list item"  # 定制错误信息
+EMPTY_LIST_ERROR = "You can't have an empty list item"  # 提交空事项时的错误信息
+DUPLICATE_ITEM_ERROR = "You've already got this in your list"
+
 
 # 这个类与该项目无关，仅为探索相关的API
 class ItemFormAPI(forms.Form):
@@ -30,7 +33,6 @@ class ItemForm(forms.models.ModelForm):
             'text': forms.fields.TextInput(attrs={
                 'placeholder': 'Enter a to-do item',
                 'class': 'form-control input-lg',
-
             }),
         }
         error_messages = {  # 定制错误信息

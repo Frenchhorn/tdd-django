@@ -14,6 +14,8 @@ Gunicorn 19.7.1
 `manage.py test functional_tests`
 ### 测试某一应用
 `manage.py test [appname]`
+### 测试某一具体的方法
+`manage.py test functional_tests.test_list_item_validation.ItemValidationTest.test_cannot_add_duplicate_items`
 ### 记录models.py的改动
 `manage.py makemigrations`
 ### 将改动作用到数据库
