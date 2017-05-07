@@ -9,6 +9,7 @@ from django.core.urlresolvers import reverse
 class List(models.Model):
     id = models.AutoField(primary_key=True)
 
+    # views中redirect时返回名称为view_list的urlpattern对应的方法即view_list(list_id)
     def get_absolute_url(self):
         return reverse('view_list', args=[self.id])
 
