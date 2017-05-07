@@ -19,7 +19,7 @@ from django.utils.html import escape
 
 from lists.views import home_page
 from lists.models import Item, List
-from lists.forms import ItemForm
+from lists.forms import ItemForm, EMPTY_LIST_ERROR
 
 # Create your tests here.
 
@@ -36,6 +36,8 @@ class HomePageTest(TestCase):
         self.assertIsInstance(response.context['form'], ItemForm)
 
 class NewListTest(TestCase):
+    # 创建新的事项列表
+    # /lists/new
 
     def test_saving_a_POST_request(self):
         self.client.post('/lists/new', data={'text': 'A new list item'})
@@ -49,16 +51,35 @@ class NewListTest(TestCase):
         new_list = List.objects.first()
         self.assertRedirects(response, '/lists/%d/' % (new_list.id, ))
 
-    def test_validation_errors_are_sent_back_to_home_page_template(self):
+    def test_for_invalid_input_renders_home_template(self):
+        # 在首页创建新的事项列表时，如果为非法输入值，需要返回首页，且不创建数据
         response = self.client.post('/lists/new', data={'text': ''})
         self.assertEqual(List.objects.count(), 0)
         self.assertEqual(Item.objects.count(), 0)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'home.html')
-        expected_error = escape("You can't have an empty list item")
-        self.assertContains(response, expected_error)
+
+    def test_validation_errors_are_show_on_home_page(self):
+        # 在首页创建新的事项列表时，如果为非法输入值，返回首页后，需要有错误信息
+        response = self.client.post('/lists/new', data={'text': ''})
+        self.assertContains(response, escape(EMPTY_LIST_ERROR))
+
+    def test_validation_errors_are_sent_back_to_home_page_template(self):
+        # 在首页创建新的事项列表时，如果为非法输入值，返回首页时，需要把表单传入模板
+        response = self.client.post('/lists/new', data={'text': ''})
+        self.assertIsInstance(response.context['form'], ItemForm)
 
 class ListViewTest(TestCase):
+    # 测试列表页
+    # /lists/<id>/
+
+    def post_invalid_input(self):
+        # 辅助方法，返回一个带有非法数值的POST请求
+        list_ = List.objects.create()
+        return self.client.post(
+            '/lists/%d/' % (list_.id,),
+            data={'text': ''}
+        )
 
     def test_uses_list_template(self):
         list_ = List.objects.create()
@@ -111,13 +132,41 @@ class ListViewTest(TestCase):
         )
         self.assertRedirects(response, '/lists/%d/' % (correct_list.id))
 
-    def test_validation_errors_end_up_on_lists_page(self):
+    # def test_validation_errors_end_up_on_lists_page(self):
+    #     list_ = List.objects.create()
+    #     response = self.client.post('/lists/%d/' % (list_.id,), data={'text': ''})
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertTemplateUsed(response, 'list.html')
+    #     expected_error = escape("You can't have an empty list item")
+    #     self.assertContains(response, expected_error)
+
+    def test_displays_item_form(self):
+        # 测试GET请求
         list_ = List.objects.create()
-        response = self.client.post('/lists/%d/' % (list_.id,), data={'text': ''})
+        response = self.client.get('/lists/%d/' % list_.id)
+        self.assertIsInstance(response.context['form'], ItemForm)
+
+    def test_for_invalid_input_nothing_saved_to_db(self):
+        # POST请求的数值非法时，不创建数据
+        self.post_invalid_input()
+        self.assertEqual(Item.objects.count(), 0)
+
+    def test_for_invalid_input_renders_list_template(self):
+        # POST请求的数值非法时，返回当前页面
+        response = self.post_invalid_input()
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'list.html')
-        expected_error = escape("You can't have an empty list item")
-        self.assertContains(response, expected_error)
+
+    def test_for_invalid_input_passes_form_to_template(self):
+        # POST请求的数值非法时，传递表单到当前页面
+        response = self.post_invalid_input()
+        self.assertIsInstance(response.context['form'], ItemForm)
+
+    def test_for_invalid_input_show_error_on_page(self):
+        # POST请求的数值非法时，返回当前页面，页面有错误信息
+        response = self.post_invalid_input()
+        self.assertContains(response, escape(EMPTY_LIST_ERROR))
+
 
 class ListAndItemModelsTest(TestCase):
 

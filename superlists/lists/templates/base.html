@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<!-- 
+form.errors  是一个列表，包含这个表单的所有错误
+form.text.errors  也是一个列表，只包含text字段的错误
+ -->
 <head>
     <title>To-Do lists</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" charset="utf-8">
@@ -18,9 +21,9 @@
                 <form method="POST" action="{% block form_action %}{% endblock %}">
                     {{ form.text }}
                     {% csrf_token %}
-                    {% if error %}
+                    {% if form.errors %}
                         <div class="form-group has-error">
-                            <span class="help-block">{{ error }}</span>
+                            <span class="help-block">{{ form.text.errors }}</span>
                         </div>
                     {% endif %}
                 </form>
