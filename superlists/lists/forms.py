@@ -18,6 +18,11 @@ class ItemFormAPI(forms.Form):
 # ModelForm用于自动生成对应模型的表单
 class ItemForm(forms.models.ModelForm):
 
+    # 为表单指定事项列表
+    def save(self, for_list):
+        self.instance.list_item = for_list
+        return super().save()
+
     class Meta:
         model = Item    # 指定表单用于哪个模型
         fields = ('text',)
@@ -25,7 +30,7 @@ class ItemForm(forms.models.ModelForm):
             'text': forms.fields.TextInput(attrs={
                 'placeholder': 'Enter a to-do item',
                 'class': 'form-control input-lg',
-               
+
             }),
         }
         error_messages = {  # 定制错误信息
