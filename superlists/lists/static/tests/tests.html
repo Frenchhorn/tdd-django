@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Javascript tests</title>
+    <link rel="stylesheet" type="text/css" href="qunit-2.3.2.css">
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+        <form>
+            <input type="text" name="text" />
+            <div class="has-error">Error text</div>
+        </form>
+    </div>
+
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="qunit-2.3.2.js"></script>
+    <script>
+        /* global $, QUnit */
+
+        QUnit.test("smoke test", function(assert){
+            assert.ok($('.has-error').is(':visible') === true, 'Passed');
+            $('.has-error').hide();
+            assert.ok($('.has-error').is(':visible') === false, 'Passed');
+        });
+
+
+    </script>
+</body>
+</html>
